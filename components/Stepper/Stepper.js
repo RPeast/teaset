@@ -4,7 +4,7 @@
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, View, Text, TouchableOpacity, ViewPropTypes} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, ViewPropTypes,TextInput} from 'react-native';
 
 import Theme from 'teaset/themes/Theme';
 
@@ -110,20 +110,27 @@ export default class Stepper extends Component {
 
   onSubButtonPress() {
     let {value, step, min, onChange} = this.props;
+    value = Number(value)
+    step = Number(step)
     if (value === undefined) value = this.state.value;
     value -= step;
     if (value < min) value = min;
+    value = value.toFixed(2)
     this.setState({value});
     onChange && onChange(value);
   }
 
   onAddButtonPress() {
     let {value, step, max, onChange} = this.props;
+    value = Number(value)
+    step = Number(step)
     if (value === undefined) value = this.state.value;
     value += step;
     if (value > max) value = max;
+    value = value.toFixed(2)
     this.setState({value});
     onChange && onChange(value);
+    //2589
   }
 
   render() {
@@ -152,7 +159,12 @@ export default class Stepper extends Component {
           </View>
         </TouchableOpacity>
         {separator}
-        <Text style={valueStyle} numberOfLines={1}>{valueFormat ? valueFormat(value) : value}</Text>
+        <TextInput 
+          style={{width:200,padding:0}}
+          defaultValue={valueFormat ? valueFormat(value)+'' : value+''}
+          onChangeText={(c)=> onChange && onChange(c)}
+          keyboardType={'numeric'}
+        />
         {separator}
         <TouchableOpacity disabled={addDisabled} onPress={() => this.onAddButtonPress()}>
           <View style={{opacity: addOpacity}}>
